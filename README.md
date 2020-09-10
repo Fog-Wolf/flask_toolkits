@@ -3,14 +3,14 @@ flask_toolkits
 本人经过几个flask完整项目的历练，总结了这些方法希望能在未来帮助到自己或者同样使用flask框架的挚友们！
 
 ### 环境依赖
-flask v1.1.1+
-flask_sqlalchemy v2.4.1+
-xlrd v1.2.0
-wtforms v2.2.1
+* flask v1.1.1+
+* flask_sqlalchemy v2.4.1+
+* xlrd v1.2.0
+* wtforms v2.2.1
 
 ### 安装步骤
-1.下载到本地
-2.将整个文件放置到项目中即可
+* 下载到本地
+* 将整个文件放置到项目中即可
 
 ### 目录结构描述
 * Readme.md                       // 帮助
