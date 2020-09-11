@@ -11,13 +11,12 @@
 # ░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒
 # ▀▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒
 # @Author : 雾江南
-import re
-import os
 import json
 import time
 from flask_sqlalchemy import get_debug_queries
 from flask import request, g
 from datetime import datetime
+from trick import simple_async
 
 
 class RequestHandler(object):
@@ -87,6 +86,8 @@ class RequestsLog(object):
         api_name = request.url
 
         if api_name.find(self.docs_url) == -1:
+            import re
+
             api_url = re.sub(r"[a-zA-z]+://[^\s]*/", "", api_name)
 
             if not api_url:
@@ -113,8 +114,10 @@ class RequestsLog(object):
                                           str(self.request_data), str(response.json), level_name)
         return response
 
+    @simple_async
     def _save_log_by_local(self, api_name, status_code, user_id, url, method, request_data, response_data, level):
         from layer_data.helper import PathUtil, check_or_create_file_exist
+        import os
 
         save_path = self.app.config.get('REQUEST_LOG_METHOD_LOCAL_PATH',
                                         os.path.abspath(os.path.dirname(PathUtil().rootPath)))
@@ -131,8 +134,10 @@ class RequestsLog(object):
                 [api_name, str(status_code), user_id if user_id else '', url, method, request_data, response_data,
                  level, str(self.request_start_time - time.time())]) + '\n')
 
+    @simple_async
     def _save_log_by_mysql(self):
         pass
 
+    @simple_async
     def _save_log_by_redis(self):
         pass
