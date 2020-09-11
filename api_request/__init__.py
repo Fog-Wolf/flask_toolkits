@@ -101,6 +101,7 @@ class RequestsLog(object):
                 'local': self._save_log_by_local,
                 'mysql': self._save_log_by_mysql,
                 'redis': self._save_log_by_redis,
+                'kafka': self._save_log_by_kafka
             }
 
             if request.method != 'OPTIONS':
@@ -141,3 +142,15 @@ class RequestsLog(object):
     @simple_async
     def _save_log_by_redis(self):
         pass
+
+    @simple_async
+    def _save_log_by_kafka(self):
+        from kafka import KafkaProducer
+
+        bootstrap_servers = self.app.config.get('KAFKA_SERVERS', [])
+        send_type = self.app.config.get('REQUEST_LOG_METHOD_KAFKA_SEND_TYPE', 'financial_pro')
+
+        if bootstrap_servers:
+            producer = KafkaProducer(bootstrap_servers=bootstrap_servers,
+                                     value_serializer=lambda v: json.dumps(v).encode("utf-8"))
+            producer.send(send_type, self.request_data)
