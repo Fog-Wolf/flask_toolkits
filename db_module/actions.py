@@ -111,17 +111,17 @@ class ModelAction:
 
         return model_data
 
-    def update(self, update_data):
+    def update(self, update_data, module=None):
         """
         根据条件更新
         :param update_data: 更新数据 dict
         :return:
         """
-        model_data = self.select_single()
-        ModelAction.update_by_module(model_data, update_data)
+        model_data = self.__return_module_data(self.condition, module)
+        ModelAction.__update_by_module(model_data, update_data)
 
     @staticmethod
-    def update_by_module(module, update_data):
+    def __update_by_module(module, update_data):
         """
         根据已提供的数据进行更新
         :param module: 已提供的数据
@@ -131,13 +131,13 @@ class ModelAction:
         with db.auto_commit():
             module.set_attrs(update_data)
 
-    def delete(self):
+    def delete(self, module=None):
         """
         根据条件删除
         :return:
         """
-        model_data = self.select_single()
-        ModelAction.delete_by_module(model_data)
+        model_data = self.__return_module_data(self.condition, module)
+        ModelAction.__delete_by_module(model_data)
 
     def delete_list(self):
         """
@@ -146,10 +146,10 @@ class ModelAction:
         """
         model_data = self.select_multiple()
         for data in model_data:
-            ModelAction.delete_by_module(data)
+            ModelAction.__delete_by_module(data)
 
     @staticmethod
-    def delete_by_module(module):
+    def __delete_by_module(module):
         """
         根据已提供数据删除
         :param module: 已提供的数据
@@ -166,6 +166,17 @@ class ModelAction:
         """
         res = check_count_name(self.model, data)
         return res
+
+    def __return_module_data(self, condition, module):
+        if condition is None and module is None:
+            raise ServerError(msg="缺少数据源或者条件")
+
+        if module:
+            self.model = module
+
+        model_data = self.select_single() if condition else module
+
+        return model_data
 
 
 def search_info(search_sql):

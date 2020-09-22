@@ -111,30 +111,26 @@ class BaseCreateDetail:
 
 class BaseUpdateDetail:
     @classmethod
-    def update_detail(cls, filter_dict, data):
+    def update(cls, data, filter_dict=None, module_data=None):
         """
         更新数据
         :param filter_dict: 条件
         :param data: 更新后数据
         :return:
         """
-        ModelAction(cls, filter_dict).update(data)
+        ModelAction(cls, filter_dict).update(data, module_data)
         return True
-
-    @classmethod
-    def update_detail_by_module(cls, module, data):
-        ModelAction(cls).update_by_module(module, data)
 
 
 class BaseDeleteDetail:
     @classmethod
-    def delete_detail(cls, filter_dict):
+    def delete(cls, filter_dict=None, module_data=None):
         """
         根据条件删除数据
         :param filter_dict: 条件
         :return:
         """
-        ModelAction(cls, filter_dict).delete()
+        ModelAction(cls, filter_dict).delete(module_data)
 
     @classmethod
     def delete_list(cls, filter_dict):
@@ -144,15 +140,6 @@ class BaseDeleteDetail:
         :return:
         """
         ModelAction(cls, filter_dict).delete_list()
-
-    @classmethod
-    def delete_detail_by_module(cls, module):
-        """
-        删除数据
-        :param module: 数据
-        :return:
-        """
-        ModelAction(cls).delete_by_module(module)
 
 
 class BaseSearchInfo:
