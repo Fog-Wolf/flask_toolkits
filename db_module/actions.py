@@ -59,7 +59,7 @@ class ModelAction:
 
         model_data = model_body.all()
 
-        return model_data
+        return model_data, None
 
     def select_single(self, return_error=True, error_msg=None):
         """
@@ -144,7 +144,7 @@ class ModelAction:
         根据条件删除多条
         :return:
         """
-        model_data = self.select_multiple()
+        model_data, count = self.select_multiple()
         for data in model_data:
             ModelAction.__delete_by_module(data)
 
